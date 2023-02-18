@@ -1,6 +1,21 @@
 <template>
   <form>
     <div>
+      <select v-model="formData.role">
+        <option :value="UserRoles.STUDENT">
+          Student
+        </option>
+        <option :value="UserRoles.TEACHER">
+          Teacher
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <input v-model="formData.name" type="text">
+    </div>
+
+    <div>
       <input v-model="formData.login" type="text">
     </div>
 
@@ -19,9 +34,14 @@
 </template>
 
 <script setup lang="ts">
-const formData = ref({
+import { RegistrationData } from '~/types/auth';
+import { UserRoles } from '~/enums/auth';
+
+const formData = ref<RegistrationData>({
   login: '',
   password: '',
   confirmPassword: '',
+  name: '',
+  role: UserRoles.STUDENT,
 });
 </script>

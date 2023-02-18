@@ -15,7 +15,9 @@
 </template>
 
 <script setup lang="ts">
-const formData = ref({
+import { LoginData } from '~/types/auth';
+
+const formData = ref<LoginData>({
   login: '',
   password: '',
 });

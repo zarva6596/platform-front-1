@@ -12,6 +12,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-useless-constructor': 'off',
     // "@typescript-eslint/rule-name": "error",
     'vue/html-indent': ['error', 2],
     'vue/multi-word-component-names': 'off',
@@ -59,11 +60,6 @@ module.exports = {
         consistent: true,
         minProperties: 4,
       },
-    }],
-    'no-unused-expressions': ['error', {
-      allowShortCircuit: false,
-      allowTernary: false,
-      allowTaggedTemplates: false,
     }],
     'function-paren-newline': ['error', 'consistent'],
     'comma-dangle': ['error', {
