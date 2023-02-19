@@ -48,7 +48,13 @@ axiosApiInstance.interceptors.response.use(
   response => response,
   async(error) => {
     if (error.response?.status === 401) {
-      useUserAuthentication().logoutUser();
+      const { updateToken, logoutUser } = useUserAuthentication();
+
+      try {
+        await updateToken();
+      } catch (e) {
+        await logoutUser();
+      }
     }
 
     responseErrorHandler(error);

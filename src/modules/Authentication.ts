@@ -1,60 +1,46 @@
 import { CookieRef } from '#app';
-import { LocationQueryValue } from 'vue-router';
 import { useCookie } from '#imports';
 import AuthenticationService from '~/services/authentication';
-import { AuthenticationData } from '~/types/auth';
 
 export class Authentication {
-  private static COOKIE_ACCESS_TOKEN = 'CASE_CLOUD_TOKEN';
-  private static COOKIE_USER_DATA = 'CASE_CLOUD_USER_DATA';
-  private static COOKIE_USER_EMAIL = 'COOKIE_USER_EMAIL';
-  private static COOKIE_SITE_ID = 'COOKIE_SITE_ID';
-
+  private static COOKIE_ACCESS_TOKEN = 'PLATFORM_ACCESS_TOKEN';
+  private static COOKIE_REFRESH_TOKEN = 'PLATFORM_REFRESH_TOKEN';
   private static accessToken: CookieRef<string>;
-  private static userData: CookieRef<Omit<AuthenticationData, 'token'>>;
-  private static userEmail: CookieRef<string>;
-
-  private static siteId: CookieRef<LocationQueryValue>;
+  private static refreshToken: CookieRef<string>;
 
   public static init() {
-    this.userData = useCookie(this.COOKIE_USER_DATA, { path: '/' });
     this.accessToken = useCookie(this.COOKIE_ACCESS_TOKEN, { path: '/' });
-    this.userEmail = useCookie(this.COOKIE_USER_EMAIL, { path: '/' });
-    this.siteId = useCookie(this.COOKIE_SITE_ID, { path: '/' });
+    this.refreshToken = useCookie(this.COOKIE_REFRESH_TOKEN, { path: '/' });
   }
 
-  public static async login(email: string, password: string, siteId: string) {
-    const authenticationData = await AuthenticationService.login(
-      email,
-      password,
-      siteId,
-    );
+  public static async login(login: string, password: string) {
+    const { access_token: ACCESS_TOKEN, refresh_token: REFRESH_TOKEN } = await AuthenticationService.login(login, password);
 
-    this.updateAuthenticationData(authenticationData);
-    this.setUserEmail(email);
+    this.setAccessToken(ACCESS_TOKEN);
+    this.setRefreshToken(REFRESH_TOKEN);
   }
 
-  public static async registration(siteId: string, email: string, fname: string, lname: string, password: string) {
+  public static async updateToken() {
+    const { access_token: ACCESS_TOKEN, refresh_token: REFRESH_TOKEN } = await AuthenticationService.refreshToken();
+
+    this.setAccessToken(ACCESS_TOKEN);
+    this.setRefreshToken(REFRESH_TOKEN);
+  }
+
+  public static async registration(username: string, email: string, password: string) {
     try {
       const authenticationData = await AuthenticationService.registration(
-        siteId,
+        username,
         email,
-        fname,
-        lname,
         password,
       );
 
-      this.updateAuthenticationData(authenticationData);
-      this.setUserEmail(email);
+      // eslint-disable-next-line no-console
+      console.log(authenticationData);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);
     }
-  }
-
-  public static updateAuthenticationData({ token, ...authenticationData }: AuthenticationData) {
-    this.setAccessToken(token);
-    this.setUserData(authenticationData);
   }
 
   public static logout() {
@@ -65,31 +51,15 @@ export class Authentication {
     this.accessToken.value = token;
   }
 
-  private static setUserData(data: Omit<AuthenticationData, 'token'>) {
-    this.userData.value = data;
-  }
-
-  private static setUserEmail(data: string) {
-    this.userEmail.value = data;
-  }
-
-  public static setSiteId(data: string) {
-    this.siteId.value = data;
+  private static setRefreshToken(token: string) {
+    this.refreshToken.value = token;
   }
 
   public static getAccessToken() {
     return this.accessToken.value;
   }
 
-  public static getUserData() {
-    return this.userData.value;
-  }
-
-  public static getUserEmail() {
-    return this.userEmail.value;
-  }
-
-  public static getSiteId() {
-    return this.siteId.value;
+  public static getRefreshToken() {
+    return this.refreshToken.value;
   }
 }

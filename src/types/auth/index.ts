@@ -1,24 +1,8 @@
 import { UserRoles } from '~/enums/auth';
 
-export interface User {
-    name: string
-    firstName: string
-    lastName: string
-    email: string
-    phone: string
-    avatar: string
-    website: string
-    age: string
-    initial: string
-}
-
-export interface AuthenticationData extends Omit<User, 'age'> {
-    token: string
-    code: {}
-    company: string
-    logo: string
-    coverbackground: string
-    welcomemsg: string
+export interface AuthData {
+    access_token: string
+    refresh_token: string
 }
 
 export interface LoginData {

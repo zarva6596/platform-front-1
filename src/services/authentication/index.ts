@@ -1,33 +1,43 @@
 import { axiosBaseInstance } from '~/api';
-import { AuthenticationData } from '~/types/auth';
+import { AuthData } from '~/types/auth';
 import Api from '~/services/Api';
+import { Authentication } from '~/modules/Authentication';
 class AuthenticationService extends Api {
   constructor(baseUrl: string) {
     super(baseUrl);
   }
 
-  async login(email: string, password: string, siteId: string) {
-    const { data: authenticationData }
-      = await axiosBaseInstance.post<AuthenticationData>('auth', {
-        userName: email,
-        password,
-        siteId,
-        portal: 'client',
-      });
+  async login(username: string, password: string) {
+    const { data: authenticationData } = await axiosBaseInstance.post<AuthData>('auth/login', {
+      email: username,
+      password,
+    });
 
     return authenticationData;
   }
 
-  async registration(siteId: string, email: string, fname: string, lname: string, password: string) {
-    const { data: authenticationData } = await axiosBaseInstance.post('myregistration', {
-      portal: 'client',
-      siteId,
-      account: {
-        email, fname, lname, password,
-      },
+  async registration(username: string, email: string, password: string) {
+    const { data: authenticationData } = await axiosBaseInstance.post('auth/registration', {
+      name: username,
+      email,
+      password,
     });
 
     return authenticationData;
+  }
+
+  async getCurrentUser() {
+    const { data } = await this.get('');
+
+    return data;
+  }
+
+  async refreshToken() {
+    const token = Authentication.getRefreshToken();
+
+    const { data } = await axiosBaseInstance.post<AuthData>('auth/refresh', { token });
+
+    return data;
   }
 }
 

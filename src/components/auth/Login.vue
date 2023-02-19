@@ -9,16 +9,23 @@
     </div>
 
     <div>
-      <button>Login</button>
+      <button @click.prevent="login">
+        Login
+      </button>
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
 import { LoginData } from '~/types/auth';
+import { useUserAuthentication } from '~/store/auth/useUserAuthentication';
+
+const { loginUser } = useUserAuthentication();
 
 const formData = ref<LoginData>({
   login: '',
   password: '',
 });
+
+const login = () => loginUser(formData.value.login, formData.value.password);
 </script>

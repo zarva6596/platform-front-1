@@ -28,7 +28,9 @@
     </div>
 
     <div>
-      <button>Send</button>
+      <button @click.prevent="onSubmit">
+        Send
+      </button>
     </div>
   </form>
 </template>
@@ -36,6 +38,7 @@
 <script setup lang="ts">
 import { RegistrationData } from '~/types/auth';
 import { UserRoles } from '~/enums/auth';
+import { Authentication } from '~/modules/Authentication';
 
 const formData = ref<RegistrationData>({
   login: '',
@@ -44,4 +47,6 @@ const formData = ref<RegistrationData>({
   name: '',
   role: UserRoles.STUDENT,
 });
+
+const onSubmit = () => Authentication.registration(formData.value.name, formData.value.login, formData.value.password);
 </script>
