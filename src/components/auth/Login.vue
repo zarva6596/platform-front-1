@@ -1,31 +1,22 @@
 <template>
-  <form>
-    <div>
-      <input v-model="formData.login" type="text">
-    </div>
-
-    <div>
-      <input v-model="formData.password" type="password">
-    </div>
-
-    <div>
-      <button @click.prevent="login">
-        Login
-      </button>
-    </div>
-  </form>
+  <client-only>
+    <ua-form
+      :schema="loginSchema"
+      @submit="onLogin"
+    />
+  </client-only>
 </template>
 
 <script setup lang="ts">
-import { LoginData } from '~/types/auth';
 import { useUserAuthentication } from '~/store/auth/useUserAuthentication';
+import UaForm from '~/components/ui/form/UaForm.vue';
+import { loginSchema } from '~/schemas/auth';
 
 const { loginUser } = useUserAuthentication();
 
-const formData = ref<LoginData>({
-  login: '',
-  password: '',
-});
+const onLogin = (val: Record<'login' | 'password', string>) => {
+  const { login, password } = val;
 
-const login = () => loginUser(formData.value.login, formData.value.password);
+  loginUser(login, password);
+};
 </script>
