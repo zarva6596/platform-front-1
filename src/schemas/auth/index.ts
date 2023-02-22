@@ -1,4 +1,4 @@
-import { FormSchemaItem } from '~/types/ui/form';
+import { FormSchemaItem } from 'ua-elements-vue';
 
 export const loginSchema: FormSchemaItem[] = [
   {

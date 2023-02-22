@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
+import { UaForm } from 'ua-elements-vue';
 import { useUserAuthentication } from '~/store/auth/useUserAuthentication';
-import UaForm from '~/components/ui/form/UaForm.vue';
 import { loginSchema } from '~/schemas/auth';
 
 const { loginUser } = useUserAuthentication();
